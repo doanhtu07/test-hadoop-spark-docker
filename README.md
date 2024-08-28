@@ -2,7 +2,7 @@
 
 https://hub.docker.com/r/apache/hadoop
 
-# Source code
+## Source code
 
 https://github.com/apache/hadoop/tree/docker-hadoop-3
 
@@ -14,21 +14,21 @@ https://github.com/apache/hadoop/tree/docker-hadoop-3
 
 Hadoop is installed into `/opt/hadoop`, which also means that's the `$HADOOP_HOME`.
 
-# Run
+## Run
 
-## Step 1. Run 4 containers
+### Step 1. Run 4 containers
 
 ```
 docker compose up -d
 ```
 
-## Step 2. Check containers
+### Step 2. Check containers
 
 ```
 docker ps -a
 ```
 
-## Step 3. Run a terminal inside any container you want
+### Step 3. Run a terminal inside any container you want
 
 - NOTE: Remember to use the proper name on your machine
 
@@ -40,7 +40,7 @@ docker exec -it <project-dir>-<container-name> /bin/bash
 
 Example: `docker exec -it test-hadoop-docker-namenode-1 /bin/bash`
 
-## Step 4. Test run an example
+### Step 4. Test run an example
 
 Assuming you are in workdir `/opt/hadoop`, which is also `$HADOOP_HOME`
 
@@ -54,13 +54,13 @@ or
 yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
 ```
 
-## Step 5. Exit out of the docker terminal if you want
+### Step 5. Exit out of the docker terminal if you want
 
 ```
 exit
 ```
 
-# Destroy containers
+## Destroy containers
 
 ```
 docker compose down
