@@ -6,10 +6,11 @@ https://hub.docker.com/r/apache/hadoop
 
 https://github.com/apache/hadoop/tree/docker-hadoop-3
 
-- There is a hadoop runner image
-- The image that bases on hadoop runner to install hadoop
+- There is a hadoop runner image (branch `https://github.com/apache/hadoop/tree/docker-hadoop-runner`)
+- And the docker hadoop image that bases on hadoop runner to install hadoop
+  - Includes `docker-hadoop-3` and `docker-hadoop-2` branches
 
-Hadoop is installed into `/opt/hadoop`, which also means that's `$HADOOP_HOME`
+Hadoop is installed into `/opt/hadoop`, which also means that's the `$HADOOP_HOME`.
 
 # Run
 
