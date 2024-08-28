@@ -16,19 +16,19 @@ Hadoop is installed into `/opt/hadoop`, which also means that's the `$HADOOP_HOM
 
 # Run
 
-1. Run 4 containers
+**Step 1**. Run 4 containers
 
 ```
 docker compose up -d
 ```
 
-2. Check containers
+**Step 2**. Check containers
 
 ```
 docker ps -a
 ```
 
-2. Run a terminal inside any container you want. Remember to use the proper name on your machine
+**Step 3**. Run a terminal inside any container you want. Remember to use the proper name on your machine
 
 - You should already see the name of the containers after step 2
 
@@ -38,15 +38,28 @@ docker exec -it <project-dir>-<container-name> /bin/bash
 
 Example: `docker exec -it test-hadoop-docker-namenode-1 /bin/bash`
 
-# Destroy
+**Step 4**. Test run an example
+
+Assuming you are in workdir `/opt/hadoop`, which is also `$HADOOP_HOME`
+
+```
+yarn jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
+```
+
+or 
+
+```
+yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
+```
+
+**Step 5**. Exit out of the docker terminal if you want
+
+```
+exit
+```
+
+# Destroy containers
 
 ```
 docker compose down
-```
-
-# Test
-
-```
-cd /opt/hadoop
-yarn jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
 ```
