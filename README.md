@@ -28,7 +28,9 @@ docker compose up -d
 docker ps -a
 ```
 
-## Step 3. Run a terminal inside any container you want. Remember to use the proper name on your machine
+## Step 3. Run a terminal inside any container you want
+
+- NOTE: Remember to use the proper name on your machine
 
 - You should already see the name of the containers after step 2
 
