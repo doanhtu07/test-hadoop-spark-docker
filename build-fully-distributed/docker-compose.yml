@@ -10,6 +10,8 @@ services:
     environment:
       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
       HADOOP_HOME: "/opt/hadoop"
+    volumes:
+      - ../src/:/src/
 
   datanode:
     image: apache/hadoop:3
@@ -18,6 +20,8 @@ services:
       - ./config
     environment:
       HADOOP_HOME: "/opt/hadoop"
+    volumes:
+      - ../src/:/src/
 
   resourcemanager:
     image: apache/hadoop:3
@@ -31,6 +35,7 @@ services:
       HADOOP_HOME: "/opt/hadoop"
     volumes:
       - ./test.sh:/opt/test.sh
+      - ../src/:/src/
 
   nodemanager:
     image: apache/hadoop:3
@@ -39,3 +44,5 @@ services:
       - ./config
     environment:
       HADOOP_HOME: "/opt/hadoop"
+    volumes:
+      - ../src/:/src/

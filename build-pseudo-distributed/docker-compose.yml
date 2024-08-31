@@ -1,0 +1,10 @@
+services:
+  hadoop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 9870:9870 # namenode port
+      - 8088:8088 # resource manager port
+    volumes:
+      - ../src/:/src/

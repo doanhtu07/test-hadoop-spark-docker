@@ -1,8 +1,14 @@
-# Setup according to Docker official Hadoop image
+# Setup Hadoop with Docker (in different modes)
+
+Modes: https://blog.naveenpn.com/hadoop-distribution-modes
+
+## Run fully distributed cluster mode
+
+### Source
 
 https://hub.docker.com/r/apache/hadoop
 
-## Source code
+### Source code
 
 https://github.com/apache/hadoop/tree/docker-hadoop-3
 
@@ -14,12 +20,10 @@ https://github.com/apache/hadoop/tree/docker-hadoop-3
 
 Hadoop is installed into `/opt/hadoop`, which also means that's the `$HADOOP_HOME`.
 
-## Run
-
 ### Step 1. Run 4 containers
 
 ```
-docker compose up -d
+docker compose -f ./build-fully-distributed/docker-compose.yml up -d
 ```
 
 ### Step 2. Check containers
@@ -35,10 +39,10 @@ docker ps -a
 - You should already see the name of the containers after step 2
 
 ```
-docker exec -it <project-dir>-<container-name> /bin/bash
+docker exec -it <container-name> /bin/bash
 ```
 
-Example: `docker exec -it test-hadoop-docker-namenode-1 /bin/bash`
+Example: `docker exec -it docker-namenode-1 /bin/bash`
 
 ### Step 4. Test run an example
 
@@ -48,7 +52,7 @@ Assuming you are in workdir `/opt/hadoop`, which is also `$HADOOP_HOME`
 yarn jar ./share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
 ```
 
-or 
+or
 
 ```
 yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar pi 10 10
@@ -60,8 +64,43 @@ yarn jar $HADOOP_HOME/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.6.jar
 exit
 ```
 
-## Destroy containers
+### Destroy containers
 
 ```
 docker compose down
+```
+
+## Run pseudo-distributed mode
+
+### Source code
+
+- https://github.com/loum/hadoop-pseudo/blob/main/Dockerfile
+- https://gist.github.com/pedrogomes29/863fc62b3eba55c8b9d53b236ed8e692
+
+### Step 1. Run single hadoop container
+
+```
+docker compose -f ./build-pseudo-distributed/docker-compose.yml up -d
+```
+
+### Other steps
+
+Pretty much the same as above. Get into the container and play around.
+
+```
+docker exec -it build-pseudo-distributed-hadoop-1 /bin/bash
+```
+
+### Check processes with jps
+
+```
+jps
+```
+
+### Check ports
+
+Input the PID in there.
+
+```
+ss -tulnp | grep <PID>
 ```
