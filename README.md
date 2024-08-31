@@ -104,3 +104,10 @@ Input the PID in there.
 ```
 ss -tulnp | grep <PID>
 ```
+
+### Exposed ports
+
+Currently, I've exposed 2 ports:
+
+- 9870: namenode port
+- 8088: resource manager port
