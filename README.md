@@ -111,3 +111,11 @@ Currently, I've exposed 2 ports:
 
 - 9870: namenode port
 - 8088: resource manager port
+
+### Mount code
+
+If you want to mount any code from your machine to Docker, create a folder `src` and write files there.
+
+Let's say you want to write a Java program on your machine and send it to Docker.
+
+You can write it directly under `src`, and your file will magically appear under `/src` in Docker container.
