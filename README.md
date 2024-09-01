@@ -128,6 +128,24 @@ When Docker installs openjdk 11 on Mac M2, it will probably installs as ARM form
 
 But right now, I set `JAVA_HOME` as `/usr/lib/jvm/java-11-openjdk-amd64`
 
-Same thing as in `/usr/local/hadoop/etc/hadoop/hadoop-env.sh` where the default JAVA_HOME is `/usr/lib/jvm/java-11-openjdk-amd64`
+Same thing as in `/usr/local/hadoop/etc/hadoop/hadoop-env.sh` where the default `JAVA_HOME` is `/usr/lib/jvm/java-11-openjdk-amd64`
 
 So you might want to change it to `/usr/lib/jvm/java-11-openjdk-arm64`
+
+---
+
+1. Change JAVA_HOME in environment
+
+```
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-arm64
+```
+
+---
+
+2. Change JAVA_HOME in hadoop-env.sh
+
+```
+vim /usr/local/hadoop/etc/hadoop/hadoop-env.sh
+```
+
+- Then change JAVA_HOME there to `/usr/lib/jvm/java-11-openjdk-arm64`
