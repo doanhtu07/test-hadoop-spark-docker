@@ -122,9 +122,9 @@ You can write it directly under `src`, and your file will magically appear under
 
 ### Issues
 
-#### Mac M2
+#### Mac M1 / M2 / M3
 
-When Docker installs openjdk 11 on Mac M2, it will probably installs as ARM format
+When Docker installs openjdk 11 on Mac M1 / M2 / M3, it will probably installs as ARM format
 
 But right now, I set `JAVA_HOME` as `/usr/lib/jvm/java-11-openjdk-amd64`
 
