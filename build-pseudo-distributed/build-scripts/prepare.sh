@@ -32,6 +32,36 @@ sed -i '/^export HDFS_SECONDARYNAMENODE_USER=.*/{s/.*/export HDFS_SECONDARYNAMEN
 sed -i '/^export YARN_RESOURCEMANAGER_USER=.*/{s/.*/export YARN_RESOURCEMANAGER_USER=root/;h};${x;/^$/{s//export YARN_RESOURCEMANAGER_USER=root/;H};x}' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 sed -i '/^export YARN_NODEMANAGER_USER=.*/{s/.*/export YARN_NODEMANAGER_USER=root/;h};${x;/^$/{s//export YARN_NODEMANAGER_USER=root/;H};x}' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 
+if [ ! -e "~/.bashrc" ]; then
+    touch ~/.bashrc
+fi
+
+cat > ~/.bashrc <<EOF
+INITRD=no
+DEBIAN_FRONTEND=noninteractive
+
+JAVA_HOME=$JAVA_HOME
+HADOOP_HOME=$HADOOP_HOME
+PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+
+export INITRD
+export DEBIAN_FRONTEND
+
+export JAVA_HOME
+export HADOOP_HOME
+export PATH
+EOF
+
+if [ ! -e "~/.bash_profile" ]; then
+    touch ~/.bash_profile
+fi
+
+cat ~/.bash_profile <<EOF
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+EOF
+
 # Set permissions for ssh
 chmod 700 $HOME/.ssh
 chmod 600 $HOME/.ssh/authorized_keys

@@ -18,4 +18,4 @@ RUN chmod +x /start.sh
 
 RUN /build-scripts/prepare.sh 
 
-CMD ["/bin/bash", "-l", "-c", "/start.sh"]
+CMD ["/bin/bash", "/start.sh"]
