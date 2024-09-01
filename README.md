@@ -149,3 +149,17 @@ vim /usr/local/hadoop/etc/hadoop/hadoop-env.sh
 ```
 
 - Then change JAVA_HOME there to `/usr/lib/jvm/java-11-openjdk-arm64`
+
+---
+
+3. Rerun `/start.sh`
+
+So since the JAVA_HOME was not set correctly and you've just fixed it, now we need to start the cluster using my custom script.
+
+```
+/bin/bash /start.sh
+```
+
+---
+
+4. Create a new shell with `docker exec` and test commands like `jps` there
