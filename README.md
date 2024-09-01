@@ -119,3 +119,15 @@ If you want to mount any code from your machine to Docker, create a folder `src`
 Let's say you want to write a Java program on your machine and send it to Docker.
 
 You can write it directly under `src`, and your file will magically appear under `/src` in Docker container.
+
+### Issues
+
+#### Mac M2
+
+When Docker installs openjdk 11 on Mac M2, it will probably installs as ARM format
+
+But right now, I set `JAVA_HOME` as `/usr/lib/jvm/java-11-openjdk-amd64`
+
+Same thing as in `/usr/local/hadoop/etc/hadoop/hadoop-env.sh` where the default JAVA_HOME is `/usr/lib/jvm/java-11-openjdk-amd64`
+
+So you might want to change it to `/usr/lib/jvm/java-11-openjdk-arm64`
