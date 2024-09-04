@@ -10,6 +10,7 @@ ENV HADOOP_HOME /usr/local/hadoop
 ENV PATH $PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
 
 COPY ./build-scripts/*.sh /build-scripts/
+COPY ./fixes/ /fixes/
 COPY ./config/ /tmp/
 COPY ./start.sh /start.sh
 
