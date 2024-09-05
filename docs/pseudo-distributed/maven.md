@@ -4,7 +4,26 @@ https://maven.apache.org/guides/introduction/introduction-to-archetypes.html
 
 https://medium.com/analytics-vidhya/testing-your-hadoop-program-with-maven-on-intellij-42d534db7974
 
-## Setup maven template
+## Step 1. Have your favorite IDE ready
+
+You can technically use any IDE you want:
+
+- VSCode
+- Eclipse
+- Intellij
+- Neovim
+- Vim
+- ...
+
+## Step 2. Install maven
+
+Depending on your system, installing Maven can be different
+
+I know you can use Homebrew on MacOS for Maven, but on other systems, go through Maven official docs
+
+On Linux, you can technically install a `tar.gz` file from Maven website and simply put the `bin` into your `PATH`
+
+## Step 3. Setup maven template
 
 ```
 mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.5 -DjavaCompilerVersion=11
@@ -14,7 +33,7 @@ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchetyp
 **artifactId**: wordcount-test
 **version**: 1.0.0
 
-## Setup dependencies with hadoop libraries
+## Step 4. Setup dependencies with hadoop libraries
 
 - Make sure the versions here (in `pom.xml`) match with the versions inside our `Docker` environment
   - So that it can run smoothly without any dependency conflicts
@@ -35,11 +54,11 @@ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchetyp
 </dependency>
 ```
 
-## Change code to WordCount.java
+## Step 5. Change code to WordCount.java
 
 Copy `WordCount.java` file from example code to `wordcount-test/src/main/java/com/wordcount/test`
 
-## Run package
+## Step 6. Run package
 
 ```
 mvn package
