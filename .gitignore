@@ -1,1 +1,2 @@
 build-pseudo-distributed/downloads/*
+src/*/target/*
