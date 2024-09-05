@@ -1,5 +1,11 @@
 # Run example WordCount program
 
+## Prereqisite
+
+Before following the guide below, you must have finished setting up Maven project for WordCount.java
+
+If you've not done it yet, follow `maven.md` inside this directory
+
 ## Learning hdfs
 
 - Create directory inside HDFS
