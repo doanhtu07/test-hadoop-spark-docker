@@ -6,6 +6,8 @@ Before following the guide below, you must have finished setting up Maven projec
 
 If you've not done it yet, follow `maven.md` inside this directory
 
+**NOTE**: By default, my repository already sets this up for you. But you should delete everything inside `src` folder and try again from scratch yourself.
+
 ## Learning hdfs
 
 - Create directory inside HDFS
