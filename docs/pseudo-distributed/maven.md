@@ -30,7 +30,9 @@ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchetyp
 ```
 
 **groupId**: com.wordcount.test
+
 **artifactId**: wordcount-test
+
 **version**: 1.0.0
 
 ## Step 4. Setup dependencies with hadoop libraries
