@@ -64,7 +64,9 @@ Copy `WordCount.java` file from example code to `wordcount-test/src/main/java/co
 - Keep the first line `package com.wordcount.test;` unchanged
 - That's IMPORTANT!
 
-## Step 6. Run package
+## Step 6. Run package compilation inside Docker
+
+Assuming you are in a Docker shell of our Docker Hadoop environment, run this:
 
 ```
 mvn package
