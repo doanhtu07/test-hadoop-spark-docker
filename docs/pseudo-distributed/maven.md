@@ -38,6 +38,7 @@ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchetyp
 ## Step 4. Setup dependencies with hadoop libraries
 
 - Make sure the versions here (in `pom.xml`) match with the versions inside our `Docker` environment
+
   - So that it can run smoothly without any dependency conflicts
 
 ```xml
