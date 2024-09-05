@@ -1,7 +1,5 @@
 # This file intended to be sourced
 
-HADOOP_DIST="https://dlcdn.apache.org/hadoop/common/hadoop"
-
 minimal_apt_get_args='-y --no-install-recommends'
 
 ## Build time dependencies ##

@@ -2,4 +2,4 @@
 
 Modes: https://blog.naveenpn.com/hadoop-distribution-modes
 
-Check out the wiki: https://github.com/doanhtu07/test-hadoop-docker/wiki
+**NOTE**: Check out docs inside `docs` folder
