@@ -61,6 +61,9 @@ mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -Darchetyp
 
 Copy `WordCount.java` file from example code to `wordcount-test/src/main/java/com/wordcount/test`
 
+- Keep the first line `package com.wordcount.test;` unchanged
+- That's IMPORTANT!
+
 ## Step 6. Run package
 
 ```
