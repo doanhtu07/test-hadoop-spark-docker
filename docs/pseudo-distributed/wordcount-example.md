@@ -1,6 +1,6 @@
 # Run example WordCount program
 
-## hdfs
+## Learning hdfs
 
 - Create directory inside HDFS
 
