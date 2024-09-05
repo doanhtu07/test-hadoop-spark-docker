@@ -7,12 +7,9 @@
 apt-get update -y
 apt-get install $minimal_apt_get_args $BUILD_PACKAGES $BUILD_RUN_PACKAGES
 
-# Install hadoop
-curl --insecure $HADOOP_DIST-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz | tar -x -z && mv hadoop-${HADOOP_VERSION} $HADOOP_HOME
-
 # Add ssh config for passphraseless ssh
 ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
-cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys
+cat $HOME/.ssh/id_rsa.pub >>$HOME/.ssh/authorized_keys
 mv /tmp/ssh_config $HOME/.ssh/config
 
 # Move our hadoop config files into place
@@ -33,27 +30,29 @@ sed -i '/^export YARN_RESOURCEMANAGER_USER=.*/{s/.*/export YARN_RESOURCEMANAGER_
 sed -i '/^export YARN_NODEMANAGER_USER=.*/{s/.*/export YARN_NODEMANAGER_USER=root/;h};${x;/^$/{s//export YARN_NODEMANAGER_USER=root/;H};x}' $HADOOP_HOME/etc/hadoop/hadoop-env.sh
 
 if [ ! -e "~/.bashrc" ]; then
-    touch ~/.bashrc
+  touch ~/.bashrc
 fi
 
-cat > ~/.bashrc <<EOF
+cat >~/.bashrc <<EOF
 INITRD=no
 DEBIAN_FRONTEND=noninteractive
 
 JAVA_HOME=$JAVA_HOME
 HADOOP_HOME=$HADOOP_HOME
-PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin
+MAVEN_HOME=$MAVEN_HOME
+PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$MAVEN_HOME/apache-maven-$MAVEN_VERSION/bin
 
 export INITRD
 export DEBIAN_FRONTEND
 
 export JAVA_HOME
 export HADOOP_HOME
+export MAVEN_HOME
 export PATH
 EOF
 
 if [ ! -e "~/.bash_profile" ]; then
-    touch ~/.bash_profile
+  touch ~/.bash_profile
 fi
 
 cat ~/.bash_profile <<EOF
