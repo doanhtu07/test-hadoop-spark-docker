@@ -1,2 +1,10 @@
 build-pseudo-distributed/downloads/*
 src/*/target/*
+
+# my homework
+src/**/homeworks/*
+
+# eclipse jdtls language server
+src/*/.classpath
+src/*/.project
+src/*/.settings
