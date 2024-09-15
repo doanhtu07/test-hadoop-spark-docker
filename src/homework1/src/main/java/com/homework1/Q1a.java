@@ -1,4 +1,4 @@
-package com.wordcount.homeworks.hw1;
+package com.homework1;
 
 // import java.io.BufferedReader;
 // import java.io.File;
@@ -32,13 +32,14 @@ public class Q1a {
     public void map(LongWritable key, Text value, Context context)
         throws IOException, InterruptedException {
       // Flow:
+      //
       // - RecordReader splits input into multiple <key, value> pairs
-      //  - TextInputFormat typically splits files line by line
-      //  - key is the line's offset and the value is the actual line of text
+      // - TextInputFormat typically splits files line by line
+      // - key is the line's offset and the value is the actual line of text
       //
       // - Each mapper processes one <key, value> pair
 
-      String[] mydata = value.toString().split(" ");
+      String[] mydata = value.toString().split("\\s+");
       for (String data : mydata) {
         outputKey.set(data); // set word as each input keyword
         context.write(outputKey, one); // create a pair <keyword, 1>
@@ -71,13 +72,13 @@ public class Q1a {
 
     // get all args
     if (otherArgs.length != 2) {
-      System.err.println("Usage: WordCount <in> <out>");
+      System.err.println("Usage: Q1a <in> <out>");
       System.exit(2);
     }
 
     // create a job with name "wordcount"
     @SuppressWarnings("deprecation")
-    Job job = new Job(conf, "1a - wordcount");
+    Job job = new Job(conf, "Q1a - wordcount");
     job.setJarByClass(Q1a.class);
     job.setMapperClass(Map.class);
     job.setReducerClass(Reduce.class);

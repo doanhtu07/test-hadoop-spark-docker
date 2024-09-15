@@ -57,7 +57,7 @@ hdfs dfs -mkdir -p /user/<yourname>/input
 ### Step 2. Copy our input file to HDFS
 
 ```
-hdfs dfs -put /src/wordcount-test-input.txt /user/<yourname>/input
+hdfs dfs -put /src/io/test/wordcount-test-input.txt /user/<yourname>/input
 ```
 
 ### Step 3. Run our WordCount jar program
@@ -73,5 +73,5 @@ hadoop jar /src/wordcount-test/target/wordcount-test-1.0.0.jar com.wordcount.tes
 ### Step 4. Get successful job result
 
 ```
-hdfs dfs -get /outputCountWords/part-r-00000 /src/wordcount-test-output.txt
+hdfs dfs -get /outputCountWords/part-r-00000 /src/io/test/wordcount-test-output.txt
 ```

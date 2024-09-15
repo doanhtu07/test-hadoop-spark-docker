@@ -1,0 +1,185 @@
+package com.homework1;
+
+import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.FloatWritable;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
+
+public class Q2d {
+
+  public static class CountMap extends Mapper<LongWritable, Text, Text, Text> {
+
+    private Text outputKey = new Text();
+    private Text outputValue = new Text();
+
+    @Override
+    public void map(LongWritable key, Text value, Context context)
+        throws IOException, InterruptedException {
+
+      String[] lineData = value.toString().split(",");
+
+      // Ignore header line in csv
+      if (lineData[0].compareTo("Region") == 0) {
+        return;
+      }
+
+      // Ignore header line in csv
+      if (lineData[0].compareTo("\"country\"") == 0) {
+        return;
+      }
+
+      if (lineData.length == 8) {
+        String city = lineData[3];
+        Float avgTemp = Float.parseFloat(lineData[7]);
+
+        // DEBUG: View at localhost:9870 in userlogs
+        // System.out.println("DEBUG CountMap --- " + city + " " + avgTemp);
+
+        outputKey.set(city.toString());
+        outputValue.set(avgTemp.toString());
+
+        context.write(outputKey, outputValue);
+
+        return;
+      }
+
+      if (lineData.length == 3) {
+        String country = lineData[0];
+        String city = lineData[1];
+
+        // DEBUG: View at localhost:9870 in userlogs
+        // System.out.println("DEBUG CountMap --- " + country + " " + city);
+
+        outputKey.set(city.substring(1, city.length() - 1));
+        outputValue.set(country.substring(1, country.length() - 1));
+
+        context.write(outputKey, outputValue);
+
+        return;
+      }
+    }
+  }
+
+  public static class CountReduce extends Reducer<Text, Text, Text, Text> {
+
+    private Text outputKey = new Text();
+    private Text outputValue = new Text();
+
+    public void reduce(Text key, Iterable<Text> values, Context context)
+        throws IOException, InterruptedException {
+
+      Float sumAvgTemp = Float.valueOf(0); // initialize the sum for each keyword
+      int occurrences = 0;
+      String country = null;
+
+      for (Text val : values) {
+        try {
+          Float temp = Float.parseFloat(val.toString());
+          sumAvgTemp += temp;
+          occurrences += 1;
+        } catch (NumberFormatException e) {
+          country = val.toString();
+        }
+      }
+
+      if (country != null && occurrences > 0) {
+        outputKey.set(country + "\t" + key.toString());
+        outputValue.set(sumAvgTemp.toString() + "/" + Integer.toString(occurrences));
+        context.write(outputKey, outputValue);
+      }
+    }
+  }
+
+  public static class AverageMap extends Mapper<LongWritable, Text, Text, FloatWritable> {
+
+    private Text outputKey = new Text();
+    private FloatWritable outputValue = new FloatWritable();
+
+    public void map(LongWritable key, Text value, Context context)
+        throws IOException, InterruptedException {
+
+      String[] lineData = value.toString().split(",");
+      String[] tokens = lineData[1].split("/");
+      Float avgTemp = Float.parseFloat(tokens[0]);
+      int occurrences = Integer.parseInt(tokens[1]);
+
+      outputKey.set(lineData[0]);
+      outputValue.set(avgTemp / occurrences);
+
+      context.write(outputKey, outputValue);
+    }
+  }
+
+  // Driver program
+  public static void main(String[] args) throws Exception {
+    Configuration conf = new Configuration();
+    String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+
+    // get all args
+    if (otherArgs.length != 4) {
+      System.err.println("Usage: Q2d <city_temperature> <country_list> <intermediate> <out>");
+      System.exit(2);
+    }
+
+    // Set the custom output delimiter
+    conf.set("mapreduce.output.textoutputformat.separator", ",");
+
+    Job job1 = new Job(conf, "Q2d - phase 1 - sum up temperature and occurrences");
+
+    job1.setJarByClass(Q2d.class);
+    job1.setMapperClass(CountMap.class);
+    job1.setReducerClass(CountReduce.class);
+
+    job1.setMapOutputKeyClass(Text.class);
+    job1.setMapOutputValueClass(Text.class);
+
+    job1.setOutputKeyClass(Text.class);
+    job1.setOutputValueClass(Text.class);
+
+    // set the HDFS path of the input data
+    FileInputFormat.addInputPath(job1, new Path(otherArgs[0]));
+    FileInputFormat.addInputPath(job1, new Path(otherArgs[1]));
+    // set the HDFS path for the output
+    FileOutputFormat.setOutputPath(job1, new Path(otherArgs[2]));
+
+    // Wait till job completion
+    if (!job1.waitForCompletion(true)) {
+      System.exit(1);
+    }
+
+    // === Second job ===
+
+    // Set the custom output delimiter
+    conf.set("mapreduce.output.textoutputformat.separator", "\t");
+
+    Job job2 = new Job(conf, "Q2d - phase 2 - make average temperature");
+
+    job2.setJarByClass(Q2d.class);
+    job2.setMapperClass(AverageMap.class);
+    // Use default identity reducer => No declaration
+
+    job2.setMapOutputKeyClass(Text.class);
+    job2.setMapOutputValueClass(FloatWritable.class);
+
+    job2.setOutputKeyClass(Text.class);
+    job2.setOutputValueClass(FloatWritable.class);
+
+    // set the HDFS path of the input data
+    FileInputFormat.addInputPath(job2, new Path(otherArgs[2]));
+    // set the HDFS path for the output
+    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[3]));
+
+    // Wait till job completion
+    if (!job2.waitForCompletion(true)) {
+      System.exit(1);
+    }
+  }
+}
