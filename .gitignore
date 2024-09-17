@@ -4,6 +4,7 @@ src/*/target/*
 # my private submission
 src/*-submission
 src/io/hw*/
+private/*
 
 # eclipse jdtls language server
 src/*/.classpath
