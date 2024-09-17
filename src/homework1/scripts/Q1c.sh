@@ -21,8 +21,6 @@ else
     echo "File uploaded to HDFS successfully."
 fi
 
-hadoop jar /src/homework1/target/homework1-1.0.0.jar com.homework1.Q1c $HDFS_PATH /intermediate/hw1/Q1c/ /output/hw1/Q1c/
-
-hdfs dfs -get /intermediate/hw1/Q1c/part-r-00000 /src/io/hw1/Q1c-intermediate.txt
+hadoop jar /src/homework1/target/homework1-1.0.0.jar com.homework1.Q1c $HDFS_PATH /output/hw1/Q1c/
 
 hdfs dfs -get /output/hw1/Q1c/part-r-00000 /src/io/hw1/Q1c-output.txt

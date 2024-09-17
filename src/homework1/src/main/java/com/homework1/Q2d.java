@@ -68,10 +68,10 @@ public class Q2d {
     }
   }
 
-  public static class CountReduce extends Reducer<Text, Text, Text, Text> {
+  public static class CountReduce extends Reducer<Text, Text, Text, FloatWritable> {
 
     private Text outputKey = new Text();
-    private Text outputValue = new Text();
+    private FloatWritable outputValue = new FloatWritable();
 
     public void reduce(Text key, Iterable<Text> values, Context context)
         throws IOException, InterruptedException {
@@ -91,30 +91,10 @@ public class Q2d {
       }
 
       if (country != null && occurrences > 0) {
-        outputKey.set(country + "\t" + key.toString());
-        outputValue.set(sumAvgTemp.toString() + "/" + Integer.toString(occurrences));
+        outputKey.set(country + "," + key.toString());
+        outputValue.set(sumAvgTemp / occurrences);
         context.write(outputKey, outputValue);
       }
-    }
-  }
-
-  public static class AverageMap extends Mapper<LongWritable, Text, Text, FloatWritable> {
-
-    private Text outputKey = new Text();
-    private FloatWritable outputValue = new FloatWritable();
-
-    public void map(LongWritable key, Text value, Context context)
-        throws IOException, InterruptedException {
-
-      String[] lineData = value.toString().split(",");
-      String[] tokens = lineData[1].split("/");
-      Float avgTemp = Float.parseFloat(tokens[0]);
-      int occurrences = Integer.parseInt(tokens[1]);
-
-      outputKey.set(lineData[0]);
-      outputValue.set(avgTemp / occurrences);
-
-      context.write(outputKey, outputValue);
     }
   }
 
@@ -124,15 +104,16 @@ public class Q2d {
     String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
     // get all args
-    if (otherArgs.length != 4) {
-      System.err.println("Usage: Q2d <city_temperature> <country_list> <intermediate> <out>");
+    if (otherArgs.length != 3) {
+      System.err.println("Usage: Q2d <city_temperature> <country_list> <out>");
       System.exit(2);
     }
 
     // Set the custom output delimiter
     conf.set("mapreduce.output.textoutputformat.separator", ",");
 
-    Job job1 = new Job(conf, "Q2d - phase 1 - sum up temperature and occurrences");
+    @SuppressWarnings("deprecation")
+    Job job1 = new Job(conf, "Q2d - average temperature for capital city");
 
     job1.setJarByClass(Q2d.class);
     job1.setMapperClass(CountMap.class);
@@ -142,7 +123,7 @@ public class Q2d {
     job1.setMapOutputValueClass(Text.class);
 
     job1.setOutputKeyClass(Text.class);
-    job1.setOutputValueClass(Text.class);
+    job1.setOutputValueClass(FloatWritable.class);
 
     // set the HDFS path of the input data
     FileInputFormat.addInputPath(job1, new Path(otherArgs[0]));
@@ -152,33 +133,6 @@ public class Q2d {
 
     // Wait till job completion
     if (!job1.waitForCompletion(true)) {
-      System.exit(1);
-    }
-
-    // === Second job ===
-
-    // Set the custom output delimiter
-    conf.set("mapreduce.output.textoutputformat.separator", "\t");
-
-    Job job2 = new Job(conf, "Q2d - phase 2 - make average temperature");
-
-    job2.setJarByClass(Q2d.class);
-    job2.setMapperClass(AverageMap.class);
-    // Use default identity reducer => No declaration
-
-    job2.setMapOutputKeyClass(Text.class);
-    job2.setMapOutputValueClass(FloatWritable.class);
-
-    job2.setOutputKeyClass(Text.class);
-    job2.setOutputValueClass(FloatWritable.class);
-
-    // set the HDFS path of the input data
-    FileInputFormat.addInputPath(job2, new Path(otherArgs[2]));
-    // set the HDFS path for the output
-    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[3]));
-
-    // Wait till job completion
-    if (!job2.waitForCompletion(true)) {
       System.exit(1);
     }
   }

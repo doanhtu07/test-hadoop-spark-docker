@@ -38,8 +38,6 @@ else
     echo "File uploaded to HDFS successfully."
 fi
 
-hadoop jar /src/homework1/target/homework1-1.0.0.jar com.homework1.Q2d $HDFS_CITY_PATH $HDFS_COUNTRY_PATH /intermediate/hw1/Q2d/ /output/hw1/Q2d/
-
-hdfs dfs -get /intermediate/hw1/Q2d/part-r-00000 /src/io/hw1/Q2d-intermediate.txt
+hadoop jar /src/homework1/target/homework1-1.0.0.jar com.homework1.Q2d $HDFS_CITY_PATH $HDFS_COUNTRY_PATH /output/hw1/Q2d/
 
 hdfs dfs -get /output/hw1/Q2d/part-r-00000 /src/io/hw1/Q2d-output.txt

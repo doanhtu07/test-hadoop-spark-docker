@@ -4,6 +4,7 @@ package com.homework1;
 // import java.io.File;
 // import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashSet;
 
 // import java.net.URI;
 // import java.util.ArrayList;
@@ -27,10 +28,10 @@ import org.apache.hadoop.util.GenericOptionsParser;
 
 public class Q1c {
 
-  public static class CountMap extends Mapper<LongWritable, Text, Text, IntWritable> {
+  public static class CountMap extends Mapper<LongWritable, Text, Text, Text> {
 
-    private static final IntWritable one = new IntWritable(1);
     private Text outputKey = new Text(); // type of output key
+    private Text outputValue = new Text();
 
     public void map(LongWritable key, Text value, Context context)
         throws IOException, InterruptedException {
@@ -44,43 +45,19 @@ public class Q1c {
 
       String[] mydata = value.toString().split("\\s+");
       for (String data : mydata) {
-        outputKey.set(data.toLowerCase()); // set lowercase word as each input keyword
-        context.write(outputKey, one); // create a pair <keyword, 1>
+        String mapKey = data.length() == 0 ? "0|" : data.length() + "|" + String.valueOf(data.charAt(0)).toLowerCase();
+        outputKey.set(mapKey);
+        outputValue.set(data);
+        context.write(outputKey, outputValue);
       }
     }
   }
 
-  public static class UniqueMap extends Mapper<LongWritable, Text, Text, IntWritable> {
-
-    private static final IntWritable one = new IntWritable(1);
-    private Text outputKey = new Text(); // type of output key
-
-    public void map(LongWritable key, Text value, Context context)
-        throws IOException, InterruptedException {
-      // Flow:
-      //
-      // - RecordReader splits input into multiple <key, value> pairs
-      // - TextInputFormat typically splits files line by line
-      // - key is the line's offset and the value is the actual line of text
-      //
-      // - Each mapper processes one <key, value> pair
-
-      String[] mydata = value.toString().split("\\s+");
-      String uniqueString = mydata[0];
-
-      // length + " " + first character
-      String mapKey = uniqueString.length() == 0 ? "0|" : uniqueString.length() + "|" + uniqueString.charAt(0);
-
-      outputKey.set(mapKey);
-      context.write(outputKey, one);
-    }
-  }
-
-  public static class CountReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
+  public static class CountReduce extends Reducer<Text, Text, Text, IntWritable> {
 
     private IntWritable result = new IntWritable();
 
-    public void reduce(Text key, Iterable<IntWritable> values, Context context)
+    public void reduce(Text key, Iterable<Text> values, Context context)
         throws IOException, InterruptedException {
 
       // Flow:
@@ -88,10 +65,17 @@ public class Q1c {
 
       // Mapper: multiple pairs (key -> 1)
 
+      HashSet<String> set = new HashSet<>();
+
       int sum = 0; // initialize the sum for each keyword
-      for (IntWritable val : values) {
-        sum += val.get();
+      for (Text val : values) {
+        if (set.contains(val.toString())) {
+          continue;
+        }
+        sum += 1;
+        set.add(val.toString());
       }
+
       result.set(sum);
       context.write(key, result); // create a pair <keyword, number of occurences>
     }
@@ -103,21 +87,22 @@ public class Q1c {
     String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
     // get all args
-    if (otherArgs.length != 3) {
-      System.err.println("Usage: Q1c <in> <tmp> <out>");
+    if (otherArgs.length != 2) {
+      System.err.println("Usage: Q1c <in> <out>");
       System.exit(2);
     }
 
     // create a job with name "wordcount"
     @SuppressWarnings("deprecation")
-    Job job1 = new Job(conf, "Q1c - unique wordcount phase 1: count words");
+    Job job1 = new Job(conf, "Q1c - unique wordcount");
     job1.setJarByClass(Q1c.class);
     job1.setMapperClass(CountMap.class);
     job1.setReducerClass(CountReduce.class);
 
-    // set output key type
+    job1.setMapOutputKeyClass(Text.class);
+    job1.setMapOutputValueClass(Text.class);
+
     job1.setOutputKeyClass(Text.class);
-    // set output value type
     job1.setOutputValueClass(IntWritable.class);
 
     // set the HDFS path of the input data
@@ -127,30 +112,6 @@ public class Q1c {
 
     // Wait till job completion
     if (!job1.waitForCompletion(true)) {
-      System.exit(1);
-    }
-
-    // === Second job ===
-
-    // create a job with name "wordcount"
-    @SuppressWarnings("deprecation")
-    Job job2 = new Job(conf, "Q1c - unique wordcount phase 2: count unique criteria");
-    job2.setJarByClass(Q1c.class);
-    job2.setMapperClass(UniqueMap.class);
-    job2.setReducerClass(CountReduce.class);
-
-    // set output key type
-    job2.setOutputKeyClass(Text.class);
-    // set output value type
-    job2.setOutputValueClass(IntWritable.class);
-
-    // set the HDFS path of the input data
-    FileInputFormat.addInputPath(job2, new Path(otherArgs[1]));
-    // set the HDFS path for the output
-    FileOutputFormat.setOutputPath(job2, new Path(otherArgs[2]));
-
-    // Wait till job completion
-    if (!job2.waitForCompletion(true)) {
       System.exit(1);
     }
   }
