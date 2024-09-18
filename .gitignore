@@ -3,6 +3,7 @@ src/*/target/*
 
 # my private submission
 src/*-submission
+src/homework1
 src/io/hw*/
 private/*
 
