@@ -6,4 +6,4 @@ Modes: https://blog.naveenpn.com/hadoop-distribution-modes
 
 # Setup Spark with Docker
 
-https://hub.docker.com/r/apache/spark/
+**NOTE**: Check out docs inside `docs` folder

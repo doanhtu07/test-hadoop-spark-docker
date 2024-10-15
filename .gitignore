@@ -5,6 +5,7 @@ src/*/target/*
 src/*-submission
 # src/homework1
 src/homework2
+src/homework3
 src/io/hw*/
 private/*
 
