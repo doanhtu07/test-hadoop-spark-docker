@@ -1,15 +1,21 @@
 build-pseudo-distributed/downloads/*
 src/*/target/*
 
-# my private submission
-src/*-submission
+# my homeworks
+
 # src/homework1
 # src/homework2
-src/homework3
+# src/homework3
+src/homework4
+
+# my private submission
+
+src/*-submission
 src/io/hw*/
 private/*
 
 # eclipse jdtls language server
+
 src/*/.classpath
 src/*/.project
 src/*/.settings
